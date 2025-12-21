@@ -1,0 +1,16 @@
+
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
+
+@import "tailwindcss";
+
+html{
+  scroll-behavior: smooth;
+}
+
+@theme {
+  --font-garamond: 'EB Garamond', serif;
+  --font-karla: 'Karla', sans-serif;
+  --color-primary: #4404fb;
+  --color-secondary: #22D3EE;
+}
+
