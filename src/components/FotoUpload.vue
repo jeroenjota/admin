@@ -53,7 +53,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { api } from "/api.js";
+import { api } from "@/composables/useApi.js";
 
 const files = ref([]);
 const previews = ref([]);

@@ -7,20 +7,19 @@
         <td>{{ tour.title }}</td>
         <td>
           <RouterLink
-            :to="`/admin/tours/${tour.id}`"
+            :to="`tours/${tour.id}`"
             class="text-blue-600"
           >
             Bewerken
           </RouterLink>
         </td>
       </tr>
-    </table>
-  </div>
+    </table>  </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getTours } from "../api/tours.api";
+import { getTours } from "../src/api/tours.api";
 
 const tours = ref([]);
 
