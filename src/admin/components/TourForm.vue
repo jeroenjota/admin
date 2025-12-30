@@ -1,15 +1,15 @@
 <template>
-  <div class="max-w-5xl mx-auto p-6 space-y-6">
+  <div class="mx-auto max-w-5xl space-y-6 p-6">
     <h1 class="text-2xl font-bold">Tours onderhoud</h1>
 
     <!-- Tour lijst -->
     <h2 class="text-xl font-semibold">Bestaande tours</h2>
     <button
-      class="bg-green-600 text-white px-4 py-2 rounded"
+      class="rounded bg-green-600 px-4 py-2 text-white"
       @click="resetForm">
       Nieuwe tour
     </button>
-    <div class="flex justify-between items-center mb-4">
+    <div class="mb-4 flex items-center justify-between">
       <div>
         <table class="w-full border text-sm">
           <thead class="bg-gray-100">
@@ -18,7 +18,7 @@
               <th class="p-2">Prijs</th>
               <th class="p-2">Duur</th>
               <th class="p-2">Actief</th>
-              <th class="p-2 w-32"></th>
+              <th class="w-32 p-2"></th>
             </tr>
           </thead>
           <tbody>
@@ -31,7 +31,7 @@
                   {{ tour.active ? "Ja" : "Nee" }}
                 </span>
               </td>
-              <td class="p-2 flex gap-2">
+              <td class="flex gap-2 p-2">
                 <button class="text-blue-600" @click="editTour(tour)">
                   Bewerken
                 </button>
@@ -55,7 +55,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { api } from "/api.js";
+import { api } from "../../composables/useApi.js";
 import TourEdit from "./TourEdit.vue";
 const selectedTour = ref(null);
 const showTourDetail = ref(false);
@@ -107,7 +107,7 @@ const closeTour = () => {
 
 async function saveTour() {
   const method = form.value.id ? "PUT" : "POST";
-  const url = form.value.id ? `/api/tours/${form.value.id}` : "/api/tours";
+  const url = form.value.id ? api(`/api/tours/${form.value.id}`) : aps("/api/tours");
 
   await fetch(url, {
     method,

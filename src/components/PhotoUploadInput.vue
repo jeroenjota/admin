@@ -11,10 +11,10 @@
     <button
       class="rounded bg-blue-600 px-4 py-2 text-white"
       @click="openFileDialog">
-      Foto’s toevoegen
+      Nieuwe foto’s toevoegen
     </button>
 
-    <p class="mt-2 text-sm text-gray-500">Max 15 foto’s – JPG/PNG</p>
+    <p class="mt-2 text-sm text-gray-500">Max 25 foto’s – JPG/PNG (max 12Mb)</p>
   </div>
 </template>
 

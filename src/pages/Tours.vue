@@ -49,10 +49,10 @@
       </div>
       <TourEdit
         :form="form"
-        @saved="fetchTours"
         v-if="showTourDetail"
         :key="selectedTour?.id"
         :tour="selectedTour"
+        @saved="saveTour"
         @close="closeTour" />
     </div>
   </div>
@@ -61,6 +61,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { api } from "@/composables/useApi.js";
+
 import TourEdit from "../components/TourEdit.vue";
 const selectedTour = ref(null);
 const showTourDetail = ref(false);
@@ -81,7 +82,7 @@ const form = ref({
 });
 
 async function fetchTours() {
-  const res = await fetch(api("/api/tours"));
+  const res = await fetch(api("/api/tours?showAll=true"));
   const json = await res.json();
   tours.value = json;
 }
@@ -111,10 +112,11 @@ const closeTour = () => {
 };
 
 async function saveTour() {
+    console.log("SAVE TOUR TRIGGERED", form.value);
   const method = form.value.id ? "PUT" : "POST";
   const url = form.value.id ? `/api/tours/${form.value.id}` : "/api/tours";
 
-  await fetch(url, {
+  await fetch(api(url), {
     method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(form.value),
@@ -122,6 +124,7 @@ async function saveTour() {
 
   resetForm();
   fetchTours();
+  closeTour();
 }
 
 async function deleteTour(id) {

@@ -24,7 +24,7 @@ export const saveTourCategories = async (tourId, categoryIds) => {
 }
 
 export const getTourCategories = async (tourId) => {
-  console.log("GetTourCategories")
+  // console.log("GetTourCategories")
   const response = await fetch(api(`/api/tours/${tourId}/categories`), {
   });
   if (!response.ok) {

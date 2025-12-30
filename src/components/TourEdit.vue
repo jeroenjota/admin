@@ -2,8 +2,8 @@
   <div
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
     @click.self="emit('close')">
+    
     <!-- Formulier -->
-
     <div
       class="w-full max-w-3xl space-y-4 overflow-hidden rounded-lg border border-blue-500 bg-white p-4 shadow-2xl">
       <h2 class="font-semibold">
@@ -49,12 +49,14 @@
           v-model.number="form.price"
           type="number"
           name="prijs"
+          step="10"
           placeholder="Prijs"
           class="rounded border p-2" />
         <input
           v-model.number="form.pprice"
           type="number"
           name="prpp"
+          step="2.5"
           placeholder="Prijs/Per persoon"
           class="rounded border p-2" />
         <input
@@ -86,11 +88,13 @@
       <!-- <FotoUpload /> -->
       <div class="flex gap-2">
         <button
+          type="button"
           class="rounded bg-blue-600 px-4 py-2 text-white"
-          @click="saveTour">
+          @click="emit('saved')">
           Opslaan
         </button>
         <button
+          type="button"
           class="rounded bg-gray-400 px-4 py-2 text-white"
           @click="emit('close')">
           Annuleren
@@ -109,8 +113,6 @@ const route = useRoute();
 
 console.log("TourEdit mounted, path:", route.fullPath);
 
-import { api } from "../composables/useApi.js";
-import { reactive } from "vue";
 const props = defineProps({
   tour: {
     type: Object,
@@ -122,4 +124,5 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["saved", "close"]);
+
 </script>

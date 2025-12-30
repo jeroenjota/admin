@@ -12,17 +12,18 @@
         type="checkbox"
         :value="cat.id"
         v-model="selectedIds"
+        @change="save"
       />
       {{ cat.name }}
     </label>
     </div>
 
-    <button
+    <!-- <button
       class="mt-4 rounded bg-sky-600 px-4 py-2 text-white hover:bg-sky-700"
       @click="save"
     >
       Opslaan
-    </button>
+    </button> -->
   </div>
 </template>
 
@@ -60,9 +61,9 @@ async function save() {
 }
 
 onMounted(async () => {
-  console.log("tourId:", props.tourId)
+  // console.log("tourId:", props.tourId)
   categories.value = await getCategories();
   selectedIds.value = await getTourCategories(props.tourId);
-  console.log("SelectedIds:", selectedIds.value)
+  // console.log("SelectedIds:", selectedIds.value)
 });
 </script>

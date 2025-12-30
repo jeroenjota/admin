@@ -1,28 +1,28 @@
 <template>
-  <div class="min-h-screen flex">
+  <div class="flex min-h-screen">
     <div
-      class="hidden md:flex w-1/3 bg-gray-900 text-white flex-col items-center justify-center p-8">
-      <h1 class="text-3xl font-bold mb-4">Register</h1>
-      <p class="text-gray-300 text-center">
+      class="hidden w-1/3 flex-col items-center justify-center bg-gray-900 p-8 text-white md:flex">
+      <h1 class="mb-4 text-3xl font-bold">Register</h1>
+      <p class="text-center text-gray-300">
         Welcome @ Jota Tours! Please fill in the form to access the dashboard and manage tours.
       </p>
     </div>
 
     <!-- Register form -->
-    <div class="flex-1 flex items-center justify-center bg-gray-100 p-6">">
-      <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-        <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
+    <div class="flex flex-1 items-center justify-center bg-gray-100 p-6">">
+      <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
+        <h2 class="mb-6 text-center text-2xl font-bold">Register</h2>
 
         <form @submit.prevent="handleRegister" class="space-y-4">
           <div>
-            <label for="uName" class="block mb-1 font-medium">User Name</label>
-            <div class="flex flex-cols justify-between gap-4">
+            <label for="uName" class="mb-1 block font-medium">User Name</label>
+            <div class="flex-cols flex justify-between gap-4">
               <input
                 id="uName"
                 v-model="uName"
                 type="text"
                 placeholder="admin"
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
                 required />
               <label class="flex items-center justify-center gap-2">
                 <input type="checkbox" v-model="isAdmin" />
@@ -30,37 +30,37 @@
               </label>
             </div>
           </div>
-          <label for="fName" class="block mb-1 font-medium">Name</label>
-          <div class="flex flex-cols">
+          <label for="fName" class="mb-1 block font-medium">Name</label>
+          <div class="flex-cols flex">
             <input
               id="fName"
               v-model="fName"
               type="text"
               placeholder="First name"
-              class="w-1/2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              class="w-1/2 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
               required />
             <input
               id="sName"
               v-model="sName"
               type="text"
               placeholder="Surname"
-              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
               required />
           </div>
 
           <div>
-            <label for="email" class="block mb-1 font-medium">Email</label>
+            <label for="email" class="mb-1 block font-medium">Email</label>
             <input
               id="email"
               v-model="email"
               type="email"
               placeholder="user@example.com"
-              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
               required />
           </div>
 
           <div>
-            <label for="password" class="block mb-1 font-medium"
+            <label for="password" class="mb-1 block font-medium"
               >Password</label
             >
             <input
@@ -68,12 +68,12 @@
               v-model="password"
               type="password"
               placeholder="••••••••"
-              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
               required />
           </div>
 
           <div>
-            <label for="passwordConfirm" class="block mb-1 font-medium"
+            <label for="passwordConfirm" class="mb-1 block font-medium"
               >Confirm Password</label
             >
             <input
@@ -81,21 +81,21 @@
               v-model="passwordConfirm"
               type="password"
               placeholder="••••••••"
-              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
               required />
           </div>
 
           <button
             type="submit"
-            class="w-full bg-sky-600 text-white font-bold py-2 px-4 rounded hover:bg-sky-700 transition"
+            class="w-full rounded bg-sky-600 px-4 py-2 font-bold text-white transition hover:bg-sky-700"
             :disabled="loading">
             <span v-if="loading">Registering...</span>
             <span v-else>Register</span>
           </button>
         </form>
 
-        <p v-if="error" class="text-red-500 mt-4 text-center">{{ error }}</p>
-        <p v-if="success" class="text-green-500 mt-4 text-center">
+        <p v-if="error" class="mt-4 text-center text-red-500">{{ error }}</p>
+        <p v-if="success" class="mt-4 text-center text-green-500">
           {{ success }}
         </p>
         <p class="mt-6 text-center text-gray-600">
