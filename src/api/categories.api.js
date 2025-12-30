@@ -9,6 +9,7 @@ export const getCategories = async () => {
 };  
 
 export const saveTourCategories = async (tourId, categoryIds) => {
+  console.log("Params", tourId, categoryIds )
   const response = await fetch(api(`/api/tours/${tourId}/categories`), {
     method: "POST",
     headers: {
@@ -21,3 +22,16 @@ export const saveTourCategories = async (tourId, categoryIds) => {
   }
   return await response.json();
 }
+
+export const getTourCategories = async (tourId) => {
+  console.log("GetTourCategories")
+  const response = await fetch(api(`/api/tours/${tourId}/categories`), {
+  });
+  if (!response.ok) {
+    throw new Error("Failed to save tour categories");
+  }
+  const data= await response.json();
+  // map naar array
+  return data.map(row=>row.id)
+}
+

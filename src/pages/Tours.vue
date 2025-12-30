@@ -18,7 +18,7 @@
               <th class="p-2">Prijs</th>
               <th class="p-2">Duur</th>
               <th class="p-2">Actief</th>
-              <th class="w-32 p-2"></th>
+              <th class="p-2">Acties</th>
             </tr>
           </thead>
           <tbody>

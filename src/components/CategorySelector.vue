@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h2 class="font-semibold mb-2">Categorieën</h2>
+    <h2 class="mb-2 font-semibold">Categorieën</h2>
     <div class="flex flex-wrap gap-4">
-      {{ selectedIds }}
+      <!-- {{ selectedIds }} -->
     <label
-      v-for="cat in categories"
+      v-for="cat, index in categories"
       :key="cat.id"
       class="flex items-center gap-2"
     >
@@ -18,7 +18,7 @@
     </div>
 
     <button
-      class="mt-4 px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700"
+      class="mt-4 rounded bg-sky-600 px-4 py-2 text-white hover:bg-sky-700"
       @click="save"
     >
       Opslaan
@@ -28,7 +28,7 @@
 
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import { getCategories, saveTourCategories } from "@/api/categories.api.js";
+import { getCategories, getTourCategories, saveTourCategories } from "@/api/categories.api.js";
 
 const props = defineProps({
   selected: {
@@ -56,10 +56,13 @@ watch(selectedIds, () => {
 });
 
 async function save() {
-  await saveTourCategories(tourId, selectedIds.value);
+  await saveTourCategories(props.tourId, selectedIds.value);
 }
 
 onMounted(async () => {
+  console.log("tourId:", props.tourId)
   categories.value = await getCategories();
+  selectedIds.value = await getTourCategories(props.tourId);
+  console.log("SelectedIds:", selectedIds.value)
 });
 </script>

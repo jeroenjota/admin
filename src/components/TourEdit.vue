@@ -16,9 +16,10 @@
             v-model="form.title"
             placeholder="Titel"
             class="mr-3 w-full rounded border p-2" />
-          <label for="">Order</label>
+          <label for="order">Order</label>
           <input
             v-model.number="form.showorder"
+            name="order"
             type="number"
             placeholder="Volgorde  "
             class="w-15 rounded border p-2" />
@@ -38,36 +39,40 @@
         </div>
       </div>
       <div class="grid grid-cols-5 gap-4">
-        <label for="">Prijs</label>
-        <label for="">Prijs pp</label>
-        <label for="">Korting</label>
-        <label for="">Max. personen</label>
-        <label for="">Duur (uur)</label>
+        <label for="prijs">Prijs</label>
+        <label for="prpp">Prijs pp</label>
+        <label for="korting">Korting</label>
+        <label for="max">Max. personen</label>
+        <label for="duur">Duur (uur)</label>
 
         <input
           v-model.number="form.price"
           type="number"
+          name="prijs"
           placeholder="Prijs"
           class="rounded border p-2" />
         <input
           v-model.number="form.pprice"
           type="number"
+          name="prpp"
           placeholder="Prijs/Per persoon"
           class="rounded border p-2" />
         <input
           v-model.number="form.discount"
           type="number"
+          name="korting"
           placeholder="Korting"
           class="rounded border p-2" />
         <input
           v-model.number="form.maxpers"
           type="number"
+          name="max"
           placeholder="Max. personen"
           class="rounded border p-2" />
-
         <input
           v-model.number="form.duration"
           type="number"
+          name="duur"
           placeholder="Duur (uur)"
           step="0.5"
           class="rounded border p-2" />
@@ -78,7 +83,7 @@
         class="w-full rounded border p-2" />
       <CategoriesSelector :tourId="form.id" />
       <PhotoManager :tourId="form.id" />
-      <FotoUpload />
+      <!-- <FotoUpload /> -->
       <div class="flex gap-2">
         <button
           class="rounded bg-blue-600 px-4 py-2 text-white"
@@ -95,7 +100,7 @@
   </div>
 </template>
 <script setup>
-import FotoUpload from "@/components/FotoUpload.vue";
+// import FotoUpload from "@/components/FotoUpload.vue";
 import PhotoManager from "@/components/PhotoManager.vue";
 import CategoriesSelector from "@/components/CategorySelector.vue";
 import { useRoute } from "vue-router";

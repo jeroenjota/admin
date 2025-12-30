@@ -1,31 +1,35 @@
 <template>
-  <div class="border-dashed border-2 p-4 rounded text-center">
+  <div class="rounded border-2 border-dashed p-4 text-center">
     <input
       type="file"
       multiple
       accept="image/*"
       class="hidden"
-      ref="input"
-      @change="onSelect"
-    />
+      ref="fileInput"
+      @change="onSelect" />
 
     <button
-      class="bg-blue-600 text-white px-4 py-2 rounded"
-      @click="$refs.input.click()"
-    >
+      class="rounded bg-blue-600 px-4 py-2 text-white"
+      @click="openFileDialog">
       Foto’s toevoegen
     </button>
 
-    <p class="text-sm text-gray-500 mt-2">
-      Max 15 foto’s – JPG/PNG
-    </p>
+    <p class="mt-2 text-sm text-gray-500">Max 15 foto’s – JPG/PNG</p>
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
+
 const emit = defineEmits(["upload"]);
+const fileInput = ref(null);
+
+function openFileDialog() {
+  fileInput.value.click();
+}
 
 function onSelect(e) {
   emit("upload", Array.from(e.target.files));
+  e.target.value = null;
 }
 </script>
