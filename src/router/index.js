@@ -4,7 +4,7 @@ import Login from "@/pages/Login.vue";
 import Register from "@/pages/Register.vue";
 import Dashboard from "@/pages/Dashboard.vue";
 import Tours from "@/pages/Tours.vue";
-import CategoriesAdmin from "@/pages/CategoriesAdmin.vue"
+import Categories from "@/pages/Categories.vue"
 import UsersAdmin from "../pages/UsersAdmin.vue";
 
 const routes = [
@@ -18,7 +18,7 @@ const routes = [
     children: [
       { path: "", redirect: "tours" },
       { path: "tours", component: Tours },
-      { path: "categories", component: CategoriesAdmin },
+      { path: "categories", component: Categories },
       { path: "users", component: UsersAdmin },
     ],
   },

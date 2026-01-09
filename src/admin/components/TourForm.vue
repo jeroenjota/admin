@@ -45,7 +45,7 @@
       </div>
       <TourEdit
         :form="form"
-        @saved="fetchTours"
+        @saved="saveTour"
         v-if="showTourDetail"
         :key="selectedTour?.id"
         :tour="selectedTour"
@@ -107,7 +107,8 @@ const closeTour = () => {
 
 async function saveTour() {
   const method = form.value.id ? "PUT" : "POST";
-  const url = form.value.id ? api(`/api/tours/${form.value.id}`) : aps("/api/tours");
+  // als het een post is dan naar de root van tourts, anders naar de specifieke tour-id
+  const url = form.value.id ? api(`/api/tours/${form.value.id}`) : api("/api/tours");
 
   await fetch(url, {
     method,

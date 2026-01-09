@@ -58,10 +58,19 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { api} from "../composables/useApi.js"
+const props = defineProps({
+  isCategory: {
+    type: Boolean,
+    required: false,
+    withDefaults: false
+  },
+});
+
 const emit = defineEmits(["close", "select"]);
 
 const library = ref([]);
 const selectedIds = ref([]);
+const singlePhoto = ref(null);
 const search = ref("");
 
 /* ---------- filtering ---------- */
@@ -75,6 +84,11 @@ const filteredLibrary = computed(() => {
 
 /* ---------- selectie ---------- */
 function toggle(id) {
+  if (props.isCategory) {
+    singlePhoto.value = library.value.find(p => p.id === id).filename;
+    emit("select", singlePhoto.value);
+    return;
+  }
   if (selectedIds.value.includes(id)) {
     selectedIds.value = selectedIds.value.filter(x => x !== id);
   } else {

@@ -107,11 +107,6 @@
 // import FotoUpload from "@/components/FotoUpload.vue";
 import PhotoManager from "@/components/PhotoManager.vue";
 import CategoriesSelector from "@/components/CategorySelector.vue";
-import { useRoute } from "vue-router";
-
-const route = useRoute();
-
-console.log("TourEdit mounted, path:", route.fullPath);
 
 const props = defineProps({
   tour: {
