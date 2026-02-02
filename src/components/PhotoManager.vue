@@ -9,7 +9,7 @@
       @end="saveOrder">
       <template #item="{ element }">
         <div
-          class="group relative overflow-hidden rounded bg-white"
+          class="drag-handle group relative overflow-hidden rounded bg-white"
           :class="element.isCover ? 'ring-2 ring-blue-500 order-first' : ''">
           <!-- Thumbnail -->
           <div class="overflow-hidden rounded bg-gray-100">
@@ -76,7 +76,7 @@ import { ref, onMounted } from "vue";
 import draggable from "vuedraggable";
 import PhotoUploadInput from "./PhotoUploadInput.vue";
 import PhotoLibraryModal from "./PhotoLibraryModal.vue";
-import { api } from "../composables/useApi.js";
+import { assetUrl, apiFetch } from "../composables/useApi.js";
 
 const props = defineProps({
   tourId: { type: Number, required: true },
@@ -89,14 +89,14 @@ const showLibrary = ref(false);
    Helpers
 ------------------------- */
 function thumbUrl(filename) {
-  return api(`/uploads/thumbs/${filename}`);
+  return assetUrl(`/uploads/thumbs/${filename}`);
 }
 
 /* -------------------------
    Fetch photos
 ------------------------- */
 async function fetchPhotos() {
-  const res = await fetch(api(`/api/tours/${props.tourId}/photos`));
+  const res = await apiFetch(`/admin/tours/${props.tourId}/photos`);
   photos.value = await res.json();
 }
 
@@ -109,7 +109,7 @@ async function upload(files) {
   const fd = new FormData();
   files.forEach((f) => fd.append("photos", f));
 
-  await fetch(api(`/api/tours/${props.tourId}/photos`), {
+  await apiFetch(`/admin/tours/${props.tourId}/photos`, {
     method: "POST",
     body: fd,
   });
@@ -121,10 +121,10 @@ async function upload(files) {
    Link bestaande foto
 ------------------------- */
 async function linkPhotos(photoIds) {
-  console.log("tourId: ", props.tourId);
+  // console.log("tourId: ", props.tourId);
   await Promise.all(
     photoIds.map((photoId) =>
-      fetch(api(`/api/tours/${props.tourId}/photos/${photoId}/link`), {
+      apiFetch(`/admin/tours/${props.tourId}/photos/${photoId}/link`, {
         method: "POST",
       })
     )
@@ -137,7 +137,7 @@ async function linkPhotos(photoIds) {
    Cover foto instellen
 ------------------------- */
 async function setCover(photoId) {
-  await fetch(api(`/api/tours/${props.tourId}/photos/${photoId}/cover`), {
+  await apiFetch(`/admin/tours/${props.tourId}/photos/${photoId}/cover`, {
     method: "PATCH",
   });
 
@@ -152,7 +152,7 @@ async function setCover(photoId) {
 async function remove(photoId) {
   if (!confirm("Foto verwijderen?")) return;
 
-  await fetch(api(`/api/tours/${props.tourId}/photos/${photoId}`), {
+  await apiFetch(`/admin/tours/${props.tourId}/photos/${photoId}`, {
     method: "DELETE",
   });
 
@@ -168,7 +168,7 @@ async function saveOrder() {
     volgorde: index + 1,
   }));
 
-  await fetch(api(`/api/tours/${props.tourId}/photos/order`), {
+  await apiFetch(`/admin/tours/${props.tourId}/photos/order`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),

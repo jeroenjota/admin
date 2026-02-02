@@ -1,8 +1,8 @@
-import { api } from "../composables/useApi";
+import { apiFetch } from "../composables/useApi";
 
 export const usersApi = {
   async register(userData) {
-    const response = await fetch(api("/api/users"), {
+    const response = await apiFetch("/admin/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export const usersApi = {
 
 export const loginApi = {
   async login(credentials) {
-    const response = await fetch(api("/api/users/login"), {
+    const response = await apiFetch("/admin/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

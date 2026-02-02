@@ -14,8 +14,8 @@
         class="grid grid-cols-12 gap-2 border-b bg-gray-50 p-3 text-sm font-semibold">
         <div class="col-span-2 text-center">Volgorde</div>
         <div class="col-span-4">Titel</div>
-        <div class="col-span-1 p-2 text-right">Prijs</div>
-        <div class="col-span-2 text-center">Actief</div>
+        <div class="col-span-2 pr-4 text-right">Prijs</div>
+        <div class="col-span-1 text-center">Actief</div>
         <div class="col-span-3 text-center">Acties</div>
       </div>
       <!-- rows -->
@@ -37,8 +37,8 @@
               </button>
             </div>
             <div class="col-span-4">{{ element.title }}</div>
-            <div class="col-span-1 p-2 text-right">€ {{ element.price }}</div>
-            <div class="col-span-2 text-center">
+            <div class="col-span-2 p-2 text-right">€ {{ element.price }}</div>
+            <div class="col-span-1 text-center">
               <span
                 :class="element.active ? 'text-green-600' : 'text-gray-400'">
                 {{ element.active ? "Ja" : "Nee" }}
@@ -73,9 +73,11 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { api } from "@/composables/useApi.js";
+import { apiFetch } from "@/composables/useApi.js";
 import draggable from "vuedraggable";
 import TourEdit from "../components/TourEdit.vue";
+import { useToast } from "vue-toastification";
+const toast = useToast();
 const selectedTour = ref(null);
 const showTourDetail = ref(false);
 const tours = ref([]);
@@ -97,7 +99,7 @@ const form = ref({
 async function saveOrder() {
   const payload = tours.value.map((tour) => tour.id);
 
-  await fetch(api("/api/tours/reorder"), {
+  await apiFetch("/admin/tours/reorder", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -107,7 +109,8 @@ async function saveOrder() {
 }
 
 async function fetchTours() {
-  const res = await fetch(api("/api/tours?showAll=true"));
+  const res = await apiFetch("/admin/tours");
+  // console.log("Fetched tours:", res);
   const json = await res.json();
   tours.value = json;
 }
@@ -122,7 +125,7 @@ function editTour(tour) {
 function resetForm() {
   form.value = {
     id: null,
-    titel: "",
+    title: "",
     beschrijving: "",
     prijs: 0,
     duur: 0,
@@ -138,13 +141,20 @@ const closeTour = () => {
 
 async function saveTour() {
   const method = form.value.id ? "PUT" : "POST";
-  const url = form.value.id ? `/api/tours/${form.value.id}` : "/api/tours";
+  const url = form.value.id ? `/admin/tours/${form.value.id}` : "/admin/tours";
 
-  await fetch(api(url), {
+  const response = await apiFetch(url, {
     method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(form.value),
   });
+  if (!response.ok) {
+    const errData = await response.json();
+    toast.error("Saving tour failed! " + errData.message);
+    throw new Error(errData.message || "Saving tour failed");
+  } else {
+    toast.success("Tour saved successfully!");
+  } 
 
   resetForm();
   fetchTours();
@@ -154,7 +164,7 @@ async function saveTour() {
 async function deleteTour(id) {
   if (!confirm("Tour verwijderen?")) return;
 
-  await fetch(api(`/tours/${id}`), { method: "DELETE" });
+  await apiFetch(`/admin/tours/${id}`, { method: "DELETE" });
   fetchTours();
 }
 

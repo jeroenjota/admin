@@ -7,10 +7,10 @@ Vue 3 + Vite + Tailwind CSS admin panel for tour management system. Frontend-onl
 
 ### API Layer Pattern
 - **Location**: `src/api/*.api.js` (e.g., `tours.api.js`, `categories.api.js`)
-- **Composable**: Use `api()` from `src/composables/useApi.js` to build URLs
+- **Composable**: Use `apiUrl()` from `src/composables/useApi.js` to build URLs
 - All API functions use native `fetch()` with error handling that throws
 - **Import path**: Use `@/composables/useApi.js` (alias configured in vite.config.js)
-- Example: `const response = await fetch(api('/api/tours'))`
+- Example: `const response = await apiFetch('/api/tours')`
 
 ### Routing Structure
 - Router configured in `src/router/index.js` with nested routes

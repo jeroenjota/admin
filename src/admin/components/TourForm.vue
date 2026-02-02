@@ -55,7 +55,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { api } from "../../composables/useApi.js";
+import { api , apiFetch} from "../../composables/useApi.js";
 import TourEdit from "./TourEdit.vue";
 const selectedTour = ref(null);
 const showTourDetail = ref(false);
@@ -76,7 +76,7 @@ const form = ref({
 });
 
 async function fetchTours() {
-  const res = await fetch(api("/tours"));
+  const res = await apiFetch("/tours");
   const json = await res.json();
   tours.value = json.data;
 }
@@ -108,7 +108,7 @@ const closeTour = () => {
 async function saveTour() {
   const method = form.value.id ? "PUT" : "POST";
   // als het een post is dan naar de root van tourts, anders naar de specifieke tour-id
-  const url = form.value.id ? api(`/api/tours/${form.value.id}`) : api("/api/tours");
+  const url = form.value.id ? apiUrl(`/api/tours/${form.value.id}`) : apiUrl("/api/tours");
 
   await fetch(url, {
     method,
@@ -123,7 +123,7 @@ async function saveTour() {
 async function deleteTour(id) {
   if (!confirm("Tour verwijderen?")) return;
 
-  await fetch(api(`/tours/${id}`), { method: "DELETE" });
+  await apiFetch(`/tours/${id}`, { method: "DELETE" });
   fetchTours();
 }
 

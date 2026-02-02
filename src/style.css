@@ -14,3 +14,23 @@ html{
   --color-secondary: #22D3EE;
 }
 
+.ql-editor {
+  @apply text-lg leading-relaxed;
+}
+
+.ql-container {
+  max-height: none;
+}
+
+.Vue-Toastification__toast--success {
+  @apply bg-green-600 text-white;
+}
+.Vue-Toastification__toast--error {
+  @apply bg-red-600 text-white;
+}
+.Vue-Toastification__toast--info {
+  @apply bg-blue-600 text-white;
+}
+.Vue-Toastification__toast--warning {
+  @apply bg-yellow-500 text-black;
+}

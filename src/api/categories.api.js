@@ -1,7 +1,7 @@
-import { api } from "@/composables/useApi.js";
+import { apiUrl, assetUrl, apiFetch } from "@/composables/useApi.js";
 
 export const getCategories = async () => {
-  const response = await fetch(api("/api/categories"));
+  const response = await apiFetch("/admin/categories");
   if (!response.ok) {
     throw new Error("Failed to fetch categories");
   }
@@ -11,7 +11,7 @@ export const getCategories = async () => {
 
 export const saveCategory = async (category) => {
   console.log("Saving category in .api.js", JSON.stringify(category));
-  const url = category.id ? api(`/api/categories/${category.id}`) : api("/api/categories");
+  const url = category.id ? apiUrl(`/admin/categories/${category.id}`) : apiUrl("/admin/categories");
   const response = await fetch(url, {
     method: category.id ? "PUT" : "POST",
     headers: {
@@ -27,7 +27,7 @@ export const saveCategory = async (category) => {
 
 export const saveTourCategories = async (tourId, categoryIds) => {
   console.log("Params", tourId, categoryIds )
-  const response = await fetch(api(`/api/tours/${tourId}/categories`), {
+  const response = await apiFetch(`/admin/tours/${tourId}/categories`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export const saveTourCategories = async (tourId, categoryIds) => {
 
 export const getTourCategories = async (tourId) => {
   // console.log("GetTourCategories")
-  const response = await fetch(api(`/api/tours/${tourId}/categories`), {
+  const response = await apiFetch(`/admin/tours/${tourId}/categories`, {
   });
   if (!response.ok) {
     throw new Error("Failed to save tour categories");

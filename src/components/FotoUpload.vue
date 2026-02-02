@@ -2,8 +2,7 @@
   <div class="w-full max-w-xl space-y-4">
     <!-- Upload button -->
     <label
-      class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer
-             border-gray-300 hover:border-blue-500 bg-gray-50"
+      class="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:border-blue-500"
     >
       <span class="text-sm text-gray-600">
         Klik of sleep foto’s hierheen
@@ -22,17 +21,16 @@
       <div
         v-for="(img, index) in previews"
         :key="index"
-        class="relative group"
+        class="group relative"
       >
         <img
           :src="img.url"
-          class="w-full h-24 object-cover rounded"
+          class="h-24 w-full rounded object-cover"
         />
 
         <button
           @click="removeImage(index)"
-          class="absolute top-1 right-1 bg-black/60 text-white rounded-full w-6 h-6
-                 flex items-center justify-center opacity-0 group-hover:opacity-100"
+          class="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100"
         >
           ✕
         </button>
@@ -43,8 +41,7 @@
     <button
       @click="upload"
       :disabled="uploading || !files.length"
-      class="px-4 py-2 bg-blue-600 text-white rounded
-             disabled:bg-gray-400"
+      class="rounded bg-blue-600 px-4 py-2 text-white disabled:bg-gray-400"
     >
       {{ uploading ? "Uploaden..." : `Upload ${files.length} foto’s` }}
     </button>
@@ -53,7 +50,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { api } from "@/composables/useApi.js";
+import { assetUrl , apiFetch} from "@/composables/useApi.js";
 
 const files = ref([]);
 const previews = ref([]);
@@ -89,7 +86,7 @@ async function upload() {
   });
   console.log("Uploading", files.value);
   try {
-    await fetch(api("/upload"), {
+    await apiFetch("/upload", {
       method: "POST",
       body: formData,
     });

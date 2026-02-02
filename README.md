@@ -91,3 +91,7 @@ This is the admin site for managing tours in the Jota Tours application. It allo
 1. Clone the repository:
    ```bash
    git Clone
+
+## TODO
+    git clone
+    A Lot of stuff

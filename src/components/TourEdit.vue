@@ -2,13 +2,13 @@
   <div
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
     @click.self="emit('close')">
-    
     <!-- Formulier -->
     <div
-      class="w-full max-w-3xl space-y-4 overflow-hidden rounded-lg border border-blue-500 bg-white p-4 shadow-2xl">
+      class="max-h-[70vh] w-full max-w-3xl flex-1 space-y-4 overflow-hidden overflow-y-auto overscroll-contain rounded-lg border border-blue-500 bg-white p-4 shadow-2xl">
       <h2 class="font-semibold">
         {{ form.id ? "Tour bewerken" : "Nieuwe tour" }}
       </h2>
+      <!-- max-h-[70vh] max-w-3xl flex-1 overflow-y-auto overscroll-contain p-4 -->
       <div class="grid grid-cols-[100px_1fr] items-center gap-4">
         <label>Tournaam</label>
         <div class="flex items-center gap-3">
@@ -79,10 +79,13 @@
           step="0.5"
           class="rounded border p-2" />
       </div>
-      <textarea
-        v-model="form.content"
-        placeholder="Inhoud"
-        class="w-full rounded border p-2" />
+      <QuillEditor
+        v-model:content="form.content"
+        content-type="html"
+        theme="snow"
+        :toolbar="toolbar"
+        class="bg-white" />
+
       <CategoriesSelector :tourId="form.id" />
       <PhotoManager :tourId="form.id" />
       <!-- <FotoUpload /> -->
@@ -107,6 +110,18 @@
 // import FotoUpload from "@/components/FotoUpload.vue";
 import PhotoManager from "@/components/PhotoManager.vue";
 import CategoriesSelector from "@/components/CategorySelector.vue";
+import { QuillEditor } from "@vueup/vue-quill";
+
+const toolbar = [
+  ["bold", "italic", "underline"],
+  [{ header: [1, 2, 3, 4, false] }],
+  [{ align: [] }],
+  [{ list: "ordered" }, { list: "bullet" }],
+  [{ indent: "-1" }, { indent: "+1" }],
+  ["blockquote"],
+  ["link"],
+  ["clean"],
+];
 
 const props = defineProps({
   tour: {
@@ -119,5 +134,4 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["saved", "close"]);
-
 </script>

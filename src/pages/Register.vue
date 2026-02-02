@@ -111,7 +111,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { api } from "../composables/useApi";
+import { apiUrl, apiFetch } from "../composables/useApi";
 
 const uName = ref("")
 const fName = ref("");
@@ -137,7 +137,7 @@ async function handleRegister() {
 
   try {
     const userAdmin = isAdmin ? "/api/users/createAdmin" : "/api/users";
-    const response = await fetch(api(userAdmin), {
+    const response = await apiFetch(userAdmin, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

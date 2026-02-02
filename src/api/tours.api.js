@@ -1,7 +1,7 @@
-import { api } from "../composables/useApi.js";
+import { apiFetch } from "../composables/useApi.js";
 
 const getTours = async () => {
-  const response = await fetch(api("/api/tours"));
+  const response = await apiFetch("/api/tours");
   if (!response.ok) {
     throw new Error("Failed to fetch tours");
   }
@@ -9,7 +9,7 @@ const getTours = async () => {
 };
 
 const getTour = async (id) => {
-  const response = await fetch(api(`/api/tours/${id}`));
+  const response = await apiFetch(`/admin/tours/${id}`);
   if (!response.ok) {
     throw new Error("Failed to fetch tour");
   }

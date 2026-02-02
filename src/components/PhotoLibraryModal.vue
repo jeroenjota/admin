@@ -57,7 +57,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { api} from "../composables/useApi.js"
+import { assetUrl, apiFetch} from "../composables/useApi.js"
 const props = defineProps({
   isCategory: {
     type: Boolean,
@@ -102,12 +102,13 @@ function confirm() {
 
 /* ---------- helpers ---------- */
 function thumbUrl(filename) {
-  return api(`/uploads/thumbs/${filename}`);
+  return assetUrl(`/uploads/thumbs/${filename}`);
 }
 
 /* ---------- data ophalen ---------- */
 async function fetchLibrary() {
-  const res = await fetch(api(`/api/photos`))
+  console.log("Fetching photo library");
+  const res = await apiFetch(`/admin/photos`)
   library.value = await res.json();
 }
 
