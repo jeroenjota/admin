@@ -28,14 +28,21 @@ export function assetUrl(path = '') {
 ====================== */
 export async function apiFetch(path, options = {}) {
   const token = localStorage.getItem('token')
-  // console.log("apiFetch", apiUrl(path), options, token)
+  const isFormData = options.body instanceof FormData
+
+  const headers = {
+    ...(token && { Authorization: `Bearer ${token}` }),
+    ...(options.headers || {}),
+  }
+
+  // ❗ Alleen JSON header als het géén FormData is
+  if (!isFormData) {
+    headers['Content-Type'] = 'application/json'
+  }
+
   const res = await fetch(apiUrl(path), {
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...(options.headers || {}),
-    },
+    headers,
   })
 
   if (res.status === 401 || res.status === 403) {

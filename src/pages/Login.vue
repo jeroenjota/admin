@@ -80,7 +80,7 @@ const toast = useToast();
 async function handleLogin() {
   error.value = "";
   loading.value = true;
-  // console.log("Logging in with", email.value, password.value);
+  console.log("Logging in with", email.value, password.value);
   try {
     const response = await apiFetch("/public/login", {
       method: "POST",
@@ -94,8 +94,9 @@ async function handleLogin() {
     }
 
     const data = await response.json();
+    
     localStorage.setItem("token", data.token);
-    toast.success("Successfully logged in!");
+    toast.success(`Hello ${data.user.first}! You are successfully logged in!`);
 
     router.push(route.query.redirect || "/");
   } catch (err) {

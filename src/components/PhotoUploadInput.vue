@@ -1,3 +1,4 @@
+<!-- PhotoUploadInput.vue -->
 <template>
   <div class="rounded border-2 border-dashed p-4 text-center">
     <input
@@ -11,7 +12,7 @@
     <button
       class="rounded bg-blue-600 px-4 py-2 text-white"
       @click="openFileDialog">
-      Nieuwe foto’s toevoegen
+      Nieuwe foto’s
     </button>
 
     <p class="mt-2 text-sm text-gray-500">Max 25 foto’s – JPG/PNG (max 12Mb)</p>

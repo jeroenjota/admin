@@ -4,7 +4,7 @@
     @click.self="emit('close')">
     <!-- Formulier -->
     <div
-      class="max-h-[70vh] w-full max-w-3xl flex-1 space-y-4 overflow-hidden overflow-y-auto overscroll-contain rounded-lg border border-blue-500 bg-white p-4 shadow-2xl">
+      class="max-h-[80vh] w-full max-w-3xl flex-1 space-y-4 overflow-hidden overflow-y-auto overscroll-contain rounded-lg border border-blue-500 bg-white p-4 shadow-2xl">
       <h2 class="font-semibold">
         {{ form.id ? "Tour bewerken" : "Nieuwe tour" }}
       </h2>

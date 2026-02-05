@@ -3,13 +3,16 @@
     <h1 class="text-2xl font-bold">Tours onderhoud</h1>
 
     <!-- Tour lijst -->
-    <h2 class="text-xl font-semibold">Bestaande tours</h2>
-    <button
-      class="cursor-pointer rounded bg-green-600 px-4 py-2 text-white hover:bg-green-900"
-      @click="resetForm">
-      Nieuwe tour
-    </button>
-    <div class="rounded border bg-white">
+    <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+      <h2 class="text-xl font-semibold">Bestaande tours</h2>
+      <button
+        class="cursor-pointer rounded bg-green-600 px-4 py-2 text-white hover:bg-green-900"
+        @click="resetForm">
+        Nieuwe tour
+      </button>
+    </div>
+    <!-- Scrollable table container -->
+    <div class="h-[65vh] overflow-x-auto rounded border bg-white shadow">
       <div
         class="grid grid-cols-12 gap-2 border-b bg-gray-50 p-3 text-sm font-semibold">
         <div class="col-span-2 text-center">Volgorde</div>
@@ -60,6 +63,7 @@
         </template>
       </draggable>
     </div>
+    <!-- End scrollable area -->
     <TourEdit
       :form="form"
       v-if="showTourDetail"
@@ -68,7 +72,6 @@
       @saved="saveTour"
       @close="closeTour" />
   </div>
-  <!-- </div> -->
 </template>
 
 <script setup>
