@@ -1,12 +1,12 @@
 <!-- PhotoManager.vue -->
 <template>
-  <div class="space-y-4">
+  <div class="flex items-start justify-between gap-2 space-y-4">
     <!-- Foto grid -->
     <draggable
       v-model="photos"
       item-key="id"
       handle=".drag-handle"
-      class="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-6"
+      class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
       @end="saveOrder">
       <template #item="{ element }">
         <div
@@ -55,14 +55,15 @@
       </template>
     </draggable>
     <!-- Upload + Library knop -->
-    <div class="flex flex-col justify-between gap-4 sm:flex-row">
+    <div class="flex flex-col justify-between gap-4 sm:flex-col">
+      <h2 class="text-lg font-semibold">Foto's</h2>
       <!-- component voor nieuwe foto's -->
       <PhotoUploadInput @upload="upload" />
       <!-- component voor bestaande foto's -->
       <button
-        class="rounded border bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200"
+        class="rounded border bg-green-700 px-4 py-2 text-sm text-white hover:bg-green-900"
         @click="showLibrary = true">
-        Kies uit bestaande foto’s
+        Existing
       </button>
     </div>
     <!-- PhotoLibrary modal met bestaande foto's -->

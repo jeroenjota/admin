@@ -1,6 +1,6 @@
 <!-- PhotoUploadInput.vue -->
 <template>
-  <div class="rounded border-2 border-dashed p-4 text-center">
+  <div class="rounded text-center">
     <input
       type="file"
       multiple
@@ -10,12 +10,11 @@
       @change="onSelect" />
 
     <button
-      class="rounded bg-blue-600 px-4 py-2 text-white"
+      class="rounded border bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600"
       @click="openFileDialog">
-      Nieuwe foto’s
+      Upload
     </button>
 
-    <p class="mt-2 text-sm text-gray-500">Max 25 foto’s – JPG/PNG (max 12Mb)</p>
   </div>
 </template>
 

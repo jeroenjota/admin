@@ -4,13 +4,11 @@
     @click.self="emit('close')">
     <!-- Formulier -->
     <div
-      class="max-h-[80vh] w-full max-w-3xl flex-1 space-y-4 overflow-hidden overflow-y-auto overscroll-contain rounded-lg border border-blue-500 bg-white p-4 shadow-2xl">
-      <h2 class="font-semibold">
-        {{ form.id ? "Tour bewerken" : "Nieuwe tour" }}
-      </h2>
-      <!-- max-h-[70vh] max-w-3xl flex-1 overflow-y-auto overscroll-contain p-4 -->
+      class="max-h-[85vh] w-full max-w-4xl flex-1 space-y-4 rounded-lg border border-blue-500 bg-white p-4 shadow-2xl">
       <div class="grid grid-cols-[100px_1fr] items-center gap-4">
-        <label>Tournaam</label>
+        <label class="font-bold" for="title">{{
+          form.id ? "Bewerk: " : "Nieuwe tour"
+        }}</label>
         <div class="flex items-center gap-3">
           <input
             v-model="form.title"
@@ -25,71 +23,87 @@
             class="w-15 rounded border p-2" />
         </div>
       </div>
-      <div class="grid grid-cols-[100px_1fr] items-center gap-4">
-        <label>Omschrijving</label>
-        <div class="flex items-center gap-3">
+
+      <div
+        class="max-h-[65vh] w-full flex-1 space-y-4 overflow-hidden overflow-y-auto overscroll-contain rounded-lg border border-blue-500 bg-white p-4 shadow-2xl">
+        <div class="grid grid-cols-[100px_1fr] items-center gap-4">
+          <label>Omschrijving</label>
+          <div class="flex items-center gap-3">
+            <input
+              v-model="form.description"
+              placeholder="Ondertitel"
+              class="w-full rounded border p-2" />
+            <label class="flex items-center justify-center gap-2">
+              <input
+                type="checkbox"
+                v-model="form.active"
+                :true-value="1"
+                :false-value="0" />
+              Actief
+            </label>
+          </div>
+        </div>
+        <div class="grid grid-cols-8 gap-2">
+          <label class="col-span-2" for="prijs">Prijs</label>
+          <label class="col-span-2" for="prpp">Prijs pp</label>
+          <label for="korting">Korting</label>
+          <label for="max">Max p</label>
+          <label for="duur">Duur</label>
+          <label for="rating">Rating</label>
           <input
-            v-model="form.description"
-            placeholder="Ondertitel"
-            class="w-full rounded border p-2" />
-          <label class="flex items-center justify-center gap-2">
-            <input type="checkbox" v-model="form.active" />
-            Actief
-          </label>
+            v-model.number="form.price"
+            type="number"
+            name="prijs"
+            step="10"
+            placeholder="Prijs"
+            class="col-span-2 rounded border p-2" />
+          <input
+            v-model.number="form.pprice"
+            type="number"
+            name="prpp"
+            step="2.5"
+            placeholder="Prijs pp"
+            class="col-span-2 rounded border p-2" />
+          <input
+            v-model.number="form.discount"
+            type="number"
+            name="korting"
+            placeholder="Korting"
+            class="rounded border p-2" />
+          <input
+            v-model.number="form.maxpers"
+            type="number"
+            name="max"
+            placeholder="Max. personen"
+            class="rounded border p-2" />
+          <input
+            v-model.number="form.duration"
+            type="number"
+            name="duur"
+            placeholder="Duur"
+            step="0.5"
+            class="rounded border p-2" />
+          <input
+            v-model.number="form.rating"
+            type="number"
+            name="rating"
+            placeholder="Rating"
+            step="0.5"
+            class="rounded border p-2" />
+        </div>
+        <QuillEditor
+          v-model:content="form.content"
+          content-type="html"
+          theme="snow"
+          :toolbar="toolbar"
+          class="bg-white" />
+        <CategoriesSelector :tourId="form.id" />
+        <div class="">
+          <PhotoManager :tourId="form.id" />
         </div>
       </div>
-      <div class="grid grid-cols-5 gap-4">
-        <label for="prijs">Prijs</label>
-        <label for="prpp">Prijs pp</label>
-        <label for="korting">Korting</label>
-        <label for="max">Max. personen</label>
-        <label for="duur">Duur (uur)</label>
 
-        <input
-          v-model.number="form.price"
-          type="number"
-          name="prijs"
-          step="10"
-          placeholder="Prijs"
-          class="rounded border p-2" />
-        <input
-          v-model.number="form.pprice"
-          type="number"
-          name="prpp"
-          step="2.5"
-          placeholder="Prijs/Per persoon"
-          class="rounded border p-2" />
-        <input
-          v-model.number="form.discount"
-          type="number"
-          name="korting"
-          placeholder="Korting"
-          class="rounded border p-2" />
-        <input
-          v-model.number="form.maxpers"
-          type="number"
-          name="max"
-          placeholder="Max. personen"
-          class="rounded border p-2" />
-        <input
-          v-model.number="form.duration"
-          type="number"
-          name="duur"
-          placeholder="Duur (uur)"
-          step="0.5"
-          class="rounded border p-2" />
-      </div>
-      <QuillEditor
-        v-model:content="form.content"
-        content-type="html"
-        theme="snow"
-        :toolbar="toolbar"
-        class="bg-white" />
-
-      <CategoriesSelector :tourId="form.id" />
-      <PhotoManager :tourId="form.id" />
-      <!-- <FotoUpload /> -->
-      <div class="flex gap-2">
+      <div class="flex justify-center gap-2">
         <button
           type="button"
           class="rounded bg-blue-600 px-4 py-2 text-white"

@@ -12,7 +12,7 @@
       </button>
     </div>
     <!-- Scrollable table container -->
-    <div class="h-[65vh] overflow-x-auto rounded border bg-white shadow">
+    <div class="h-[75vh] overflow-x-auto rounded border bg-white shadow">
       <div
         class="grid grid-cols-12 gap-2 border-b bg-gray-50 p-3 text-sm font-semibold">
         <div class="col-span-2 text-center">Volgorde</div>
@@ -101,7 +101,7 @@ const form = ref({
 
 async function saveOrder() {
   const payload = tours.value.map((tour) => tour.id);
-
+  
   await apiFetch("/admin/tours/reorder", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -145,7 +145,7 @@ const closeTour = () => {
 async function saveTour() {
   const method = form.value.id ? "PUT" : "POST";
   const url = form.value.id ? `/admin/tours/${form.value.id}` : "/admin/tours";
-
+  
   const response = await apiFetch(url, {
     method,
     headers: { "Content-Type": "application/json" },
