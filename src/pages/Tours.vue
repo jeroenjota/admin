@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { apiFetch } from "@/composables/useApi.js";
 import draggable from "vuedraggable";
 import TourEdit from "../components/TourEdit.vue";
@@ -84,24 +84,44 @@ const toast = useToast();
 const selectedTour = ref(null);
 const showTourDetail = ref(false);
 const tours = ref([]);
-const form = ref({
+
+function formatDate(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0"); // maanden beginnen bij 0
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+const today = formatDate(new Date());
+const future = formatDate(new Date(new Date().getFullYear() + 5, 11, 31));
+
+
+const form = reactive({
   id: null,
   title: "",
-  description: "",
+  active: true,
+  duration: 0,
   content: "",
+  where: "",
+  showorder: null,
+  description: "",
+  itenerary: "",
   price: 0,
   pprice: 0,
-  duration: 0,
-  active: true,
   maxpers: 0,
+  fromDate: today,
+  tillDate: future,
+  startTime: "07:00",
+  maxTime: "19:00",
   discount: 0,
+  discountFrom: today,
+  discountTill: future,
   rating: 4.5,
-  showorder: null,
 });
 
 async function saveOrder() {
   const payload = tours.value.map((tour) => tour.id);
-  
+
   await apiFetch("/admin/tours/reorder", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -122,18 +142,32 @@ function editTour(tour) {
   selectedTour.value = tour;
   //  console.log("Editing tour:", tour);
   showTourDetail.value = true;
-  form.value = { ...tour };
+  Object.assign(form, tour);
 }
 
 function resetForm() {
-  form.value = {
+  Object.assign(form, {
     id: null,
     title: "",
-    beschrijving: "",
+    description: "",
     prijs: 0,
     duur: 0,
     actief: true,
-  };
+    content: "",
+    where: "",
+    showorder: null,
+    itenerary: "",
+    pprice: 0,
+    maxpers: 0,
+    fromDate: today,
+    tillDate: future,
+    startTime: "07:00",
+    maxTime: "19:00",
+    discount: 0,
+    discountFrom: today,
+    discountTill: future,
+    rating: 4.5,
+  });
   showTourDetail.value = true;
   selectedTour.value = null;
 }
@@ -143,21 +177,22 @@ const closeTour = () => {
 };
 
 async function saveTour() {
-  const method = form.value.id ? "PUT" : "POST";
-  const url = form.value.id ? `/admin/tours/${form.value.id}` : "/admin/tours";
-  
+  const method = form.id ? "PUT" : "POST";
+  const url = form.id ? `/admin/tours/${form.id}` : "/admin/tours";
+
   const response = await apiFetch(url, {
     method,
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(form.value),
+    body: JSON.stringify(form),
   });
+
   if (!response.ok) {
     const errData = await response.json();
     toast.error("Saving tour failed! " + errData.message);
     throw new Error(errData.message || "Saving tour failed");
   } else {
     toast.success("Tour saved successfully!");
-  } 
+  }
 
   resetForm();
   fetchTours();

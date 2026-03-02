@@ -1,7 +1,10 @@
+/* style.css */
 
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
 
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
 
 html{
   scroll-behavior: smooth;
@@ -20,6 +23,80 @@ html{
 
 .ql-container {
   max-height: none;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+@theme {
+  --font-garamond: 'EB Garamond', serif;
+  --font-karla: 'Karla', sans-serif;
+  --color-primary: #0a3fa3;
+  --color-secondary: #22D3EE;
+}
+
+.input {
+  @apply focus:ring-primary w-full rounded border px-4 py-2 focus:ring;
+}
+
+.btn-primary {
+  @apply bg-primary hover:bg-primary/90 rounded px-6 py-2 text-white;
+}
+
+.form-label {
+  @apply mb-1 block text-sm font-medium text-gray-700;
+}
+
+.form-input {
+  @apply focus:border-primary focus:ring-primary w-full rounded-md border border-sky-700 px-3 py-2 focus:outline-none focus:ring-1;
+}
+
+.btn-primary {
+  @apply bg-primary hover:bg-primary/90 rounded-md px-6 py-2 text-white disabled:opacity-50;
+}
+
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* Fade backdrop */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+/* Card animation */
+.modal-card {
+  animation: scaleIn 0.25s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 .Vue-Toastification__toast--success {

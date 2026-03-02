@@ -4,7 +4,7 @@
     @click.self="emit('close')">
     <!-- Formulier -->
     <div
-      class="max-h-[85vh] w-full max-w-4xl flex-1 space-y-4 rounded-lg border border-blue-500 bg-white p-4 shadow-2xl">
+      class="max-h-[95vh] w-full max-w-4xl flex-1 space-y-4 rounded-lg border border-blue-500 bg-white p-4 shadow-2xl">
       <div class="grid grid-cols-[100px_1fr] items-center gap-4">
         <label class="font-bold" for="title">{{
           form.id ? "Bewerk: " : "Nieuwe tour"
@@ -25,9 +25,9 @@
       </div>
 
       <div
-        class="max-h-[65vh] w-full flex-1 space-y-4 overflow-hidden overflow-y-auto overscroll-contain rounded-lg border border-blue-500 bg-white p-4 shadow-2xl">
-        <div class="grid grid-cols-[100px_1fr] items-center gap-4">
-          <label>Omschrijving</label>
+        class="max-h-[80vh] w-full flex-1 space-y-4 overflow-hidden overflow-y-auto overscroll-contain rounded-lg border border-blue-500 bg-white p-4 shadow-2xl">
+        <div class="grid grid-cols-[50px_1fr] items-center gap-4">
+          <label>Kort</label>
           <div class="flex items-center gap-3">
             <input
               v-model="form.description"
@@ -41,15 +41,25 @@
                 :false-value="0" />
               Actief
             </label>
+            <label for="fromDate"
+              >Vanaf
+              <input type="date" v-model="form.startDate" />
+            </label>
+            <label for="toDate"
+              >Tot
+              <input type="date" v-model="form.tillDate" />
+            </label>
           </div>
         </div>
-        <div class="grid grid-cols-8 gap-2">
+        <div class="grid grid-cols-10 gap-2">
           <label class="col-span-2" for="prijs">Prijs</label>
           <label class="col-span-2" for="prpp">Prijs pp</label>
           <label for="korting">Korting</label>
           <label for="max">Max p</label>
           <label for="duur">Duur</label>
           <label for="rating">Rating</label>
+          <label for="start">Start</label>
+          <label for="max">Max</label>
           <input
             v-model.number="form.price"
             type="number"
@@ -90,13 +100,35 @@
             placeholder="Rating"
             step="0.5"
             class="rounded border p-2" />
+          <input
+            v-model="form.startTime"
+            type="time"
+            class="rounded border p-2" />
+          <input
+            v-model="form.maxTime"
+            type="time"
+            class="rounded border p-2" />
         </div>
-        <QuillEditor
-          v-model:content="form.content"
-          content-type="html"
-          theme="snow"
-          :toolbar="toolbar"
-          class="bg-white" />
+        <div class="grid max-h-[300px] grid-cols-3 gap-4 overflow-y-auto overscroll-contain">
+          <div class="col-span-2">
+            <h2>Content</h2>
+            <QuillEditor
+              v-model:content="form.content"
+              content-type="html"
+              theme="snow"
+              :toolbar="toolbar"
+              class="bg-white" />
+          </div>
+          <div>
+            <h2>Interessante plaatsen</h2>
+            <QuillEditor
+              v-model:content="form.itenerary"
+              content-type="html"
+              theme="snow"
+              :toolbar="toolbar2"
+              class="bg-white" />
+          </div>
+        </div>
         <CategoriesSelector :tourId="form.id" />
         <div class="">
           <PhotoManager :tourId="form.id" />
@@ -132,10 +164,17 @@ const toolbar = [
   [{ align: [] }],
   [{ list: "ordered" }, { list: "bullet" }],
   [{ indent: "-1" }, { indent: "+1" }],
-  ["blockquote"],
   ["link"],
   ["clean"],
 ];
+
+const toolbar2 = [
+  ["bold", "italic"],
+  [{ list: "bullet" }],
+  ["link"],
+  ["clean"],
+];
+
 
 const props = defineProps({
   tour: {
