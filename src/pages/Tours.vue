@@ -105,14 +105,14 @@ const form = reactive({
   where: "",
   showorder: null,
   description: "",
-  itenerary: "",
+  itinerary: "",
   price: 0,
   pprice: 0,
   maxpers: 0,
   fromDate: today,
   tillDate: future,
-  startTime: "07:00",
-  maxTime: "19:00",
+  startTime: "08:00",
+  maxTime: "18:00",
   discount: 0,
   discountFrom: today,
   discountTill: future,
@@ -142,6 +142,8 @@ function editTour(tour) {
   selectedTour.value = tour;
   //  console.log("Editing tour:", tour);
   showTourDetail.value = true;
+  form.startTime = tour.startTime?.slice(0, 5)
+  form.maxTime = tour.maxTime?.slice(0, 5)
   Object.assign(form, tour);
 }
 
@@ -150,19 +152,19 @@ function resetForm() {
     id: null,
     title: "",
     description: "",
-    prijs: 0,
-    duur: 0,
-    actief: true,
+    price: 0,
+    duration: 0,
+    active: true,
     content: "",
     where: "",
     showorder: null,
-    itenerary: "",
+    itinerary: "",
     pprice: 0,
     maxpers: 0,
     fromDate: today,
     tillDate: future,
-    startTime: "07:00",
-    maxTime: "19:00",
+    startTime: "08:00",
+    maxTime: "18:00",
     discount: 0,
     discountFrom: today,
     discountTill: future,

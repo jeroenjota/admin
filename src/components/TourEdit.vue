@@ -43,7 +43,7 @@
             </label>
             <label for="fromDate"
               >Vanaf
-              <input type="date" v-model="form.startDate" />
+              <input type="date" v-model="form.fromDate" />
             </label>
             <label for="toDate"
               >Tot
@@ -58,8 +58,8 @@
           <label for="max">Max p</label>
           <label for="duur">Duur</label>
           <label for="rating">Rating</label>
-          <label for="start">Start</label>
-          <label for="max">Max</label>
+          <label for="start">Vroegst</label>
+          <label for="max">Laatst</label>
           <input
             v-model.number="form.price"
             type="number"
@@ -99,17 +99,22 @@
             name="rating"
             placeholder="Rating"
             step="0.5"
+            min="1"
+            max="10"
             class="rounded border p-2" />
-          <input
-            v-model="form.startTime"
-            type="time"
-            class="rounded border p-2" />
-          <input
-            v-model="form.maxTime"
-            type="time"
-            class="rounded border p-2" />
+          <select v-model="form.startTime" class="rounded border p-2">
+            <option v-for="t in times" :key="t" :value="t">
+              {{ t }}
+            </option>
+          </select>
+          <select v-model="form.maxTime" class="rounded border p-2">
+            <option v-for="t in times" :key="t" :value="t">
+              {{ t }}
+            </option>
+          </select>
         </div>
-        <div class="grid max-h-[300px] grid-cols-3 gap-4 overflow-y-auto overscroll-contain">
+        <div
+          class="grid max-h-[75vh] grid-cols-3 gap-4 overflow-y-auto overscroll-contain">
           <div class="col-span-2">
             <h2>Content</h2>
             <QuillEditor
@@ -120,9 +125,9 @@
               class="bg-white" />
           </div>
           <div>
-            <h2>Interessante plaatsen</h2>
+            <h2>Itinerary / Stops</h2>
             <QuillEditor
-              v-model:content="form.itenerary"
+              v-model:content="form.itinerary"
               content-type="html"
               theme="snow"
               :toolbar="toolbar2"
@@ -154,10 +159,11 @@
 </template>
 <script setup>
 // import FotoUpload from "@/components/FotoUpload.vue";
+import { computed } from "vue";
 import PhotoManager from "@/components/PhotoManager.vue";
 import CategoriesSelector from "@/components/CategorySelector.vue";
 import { QuillEditor } from "@vueup/vue-quill";
-
+import StartTimeSelect from "./StartTimeSelect.vue";
 const toolbar = [
   ["bold", "italic", "underline"],
   [{ header: [1, 2, 3, 4, false] }],
@@ -175,7 +181,6 @@ const toolbar2 = [
   ["clean"],
 ];
 
-
 const props = defineProps({
   tour: {
     type: Object,
@@ -186,5 +191,23 @@ const props = defineProps({
     required: true,
   },
 });
+
+props.form.startTime = props.tour.startTime?.slice(0, 5);
+props.form.maxTime = props.tour.maxTime?.slice(0, 5);
+
+function toTime(m) {
+  const h = String(Math.floor(m / 60)).padStart(2, "0");
+  const mm = String(m % 60).padStart(2, "0");
+  return `${h}:${mm}`;
+}
+
+const times = computed(() => {
+  const list = [];
+  for (let t = 7 * 60; t <= 18 * 60; t += 30) {
+    list.push(toTime(t));
+  }
+  return list;
+});
+
 const emit = defineEmits(["saved", "close"]);
 </script>
