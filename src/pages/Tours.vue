@@ -75,109 +75,95 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { apiFetch } from "@/composables/useApi.js";
 import draggable from "vuedraggable";
 import TourEdit from "../components/TourEdit.vue";
 import { useToast } from "vue-toastification";
+
 const toast = useToast();
+
+// ----- Refs & State -----
+const tours = ref([]);
 const selectedTour = ref(null);
 const showTourDetail = ref(false);
-const tours = ref([]);
 
-function formatDate(date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0"); // maanden beginnen bij 0
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+// vandaag en toekomst defaults
+const initDate = new Date("2017-01-01").toISOString().slice(0, 10); // YYYY-MM-DD
+const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+const future = new Date(new Date().getFullYear() + 5, 11, 31)
+  .toISOString()
+  .slice(0, 10);
+
+// ----- Form met alle velden -----
+const form = reactive(createForm());
+
+// ----- Helpers -----
+function normalizeDate(dateStr, fallback) {
+  if (!dateStr) return fallback;
+  return dateStr.slice(0, 10); // YYYY-MM-DD
 }
 
-const today = formatDate(new Date());
-const future = formatDate(new Date(new Date().getFullYear() + 5, 11, 31));
-
-
-const form = reactive({
-  id: null,
-  title: "",
-  active: true,
-  duration: 0,
-  content: "",
-  where: "",
-  showorder: null,
-  description: "",
-  itinerary: "",
-  price: 0,
-  pprice: 0,
-  maxpers: 0,
-  fromDate: today,
-  tillDate: future,
-  startTime: "08:00",
-  maxTime: "18:00",
-  discount: 0,
-  discountFrom: today,
-  discountTill: future,
-  rating: 4.5,
-});
-
-async function saveOrder() {
-  const payload = tours.value.map((tour) => tour.id);
-
-  await apiFetch("/admin/tours/reorder", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  fetchTours();
+function normalizeTime(timeStr, fallback) {
+  if (!timeStr) return fallback;
+  return timeStr.slice(0, 5); // HH:MM
 }
 
-async function fetchTours() {
-  const res = await apiFetch("/admin/tours");
-  // console.log("Fetched tours:", res);
-  const json = await res.json();
-  tours.value = json;
-}
-
+// ----- Bestaande Tour -----
 function editTour(tour) {
+  Object.assign(form, createForm(tour));
   selectedTour.value = tour;
-  //  console.log("Editing tour:", tour);
   showTourDetail.value = true;
-  form.startTime = tour.startTime?.slice(0, 5)
-  form.maxTime = tour.maxTime?.slice(0, 5)
-  Object.assign(form, tour);
 }
-
+// ---- Nieuwe Tour -----
 function resetForm() {
-  Object.assign(form, {
+  Object.assign(form, createForm());
+  selectedTour.value = null;
+  showTourDetail.value = true;
+}
+// ----- Sluiten -----
+function closeTour() {
+  selectedTour.value = null;
+  showTourDetail.value = false;
+}
+// ----- form -----
+function createForm(tour = null) {
+  const base = {
     id: null,
     title: "",
     description: "",
-    price: 0,
-    duration: 0,
-    active: true,
     content: "",
     where: "",
     showorder: null,
-    itinerary: "",
+    duration: 0,
+    price: 0,
     pprice: 0,
     maxpers: 0,
-    fromDate: today,
-    tillDate: future,
-    startTime: "08:00",
-    maxTime: "18:00",
+    active: true,
     discount: 0,
     discountFrom: today,
     discountTill: future,
     rating: 4.5,
-  });
-  showTourDetail.value = true;
-  selectedTour.value = null;
-}
-const closeTour = () => {
-  selectedTour.value = null;
-  showTourDetail.value = false;
-};
+    fromDate: initDate,
+    tillDate: future,
+    startTime: "08:00",
+    maxTime: "18:00",
+  };
 
+  if (!tour) return base;
+
+  return {
+    ...base,
+    ...tour,
+    fromDate: normalizeDate(tour.fromDate, initDate),
+    tillDate: normalizeDate(tour.tillDate, future),
+    discountFrom: normalizeDate(tour.discountFrom, today),
+    discountTill: normalizeDate(tour.discountTill, future),
+    startTime: normalizeTime(tour.startTime, "08:00"),
+    maxTime: normalizeTime(tour.maxTime, "18:00"),
+  };
+}
+// ----- Save -----
 async function saveTour() {
   const method = form.id ? "PUT" : "POST";
   const url = form.id ? `/admin/tours/${form.id}` : "/admin/tours";
@@ -197,10 +183,11 @@ async function saveTour() {
   }
 
   resetForm();
-  fetchTours();
+  await fetchTours();
   closeTour();
 }
 
+// ----- Delete -----
 async function deleteTour(id) {
   if (!confirm("Tour verwijderen?")) return;
 
@@ -208,6 +195,27 @@ async function deleteTour(id) {
   fetchTours();
 }
 
+// ----- Reorder Tours -----
+async function saveOrder() {
+  const payload = tours.value.map((tour) => tour.id);
+
+  await apiFetch("/admin/tours/reorder", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  fetchTours();
+}
+
+// ----- Fetch Tours -----
+async function fetchTours() {
+  const res = await apiFetch("/admin/tours");
+  const json = await res.json();
+  tours.value = json;
+}
+
+// ----- Lifecycle -----
 onMounted(async () => {
   await fetchTours();
 });

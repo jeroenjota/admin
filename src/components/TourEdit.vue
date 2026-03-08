@@ -163,7 +163,7 @@ import { computed } from "vue";
 import PhotoManager from "@/components/PhotoManager.vue";
 import CategoriesSelector from "@/components/CategorySelector.vue";
 import { QuillEditor } from "@vueup/vue-quill";
-import StartTimeSelect from "./StartTimeSelect.vue";
+
 const toolbar = [
   ["bold", "italic", "underline"],
   [{ header: [1, 2, 3, 4, false] }],
@@ -191,9 +191,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-props.form.startTime = props.tour.startTime?.slice(0, 5);
-props.form.maxTime = props.tour.maxTime?.slice(0, 5);
 
 function toTime(m) {
   const h = String(Math.floor(m / 60)).padStart(2, "0");
