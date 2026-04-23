@@ -81,7 +81,7 @@
             placeholder="Korting"
             class="rounded border p-2" />
           <input
-            v-model.number="form.maxpers"
+            v-model.number="form.groupsize"
             type="number"
             name="max"
             placeholder="Max. personen"

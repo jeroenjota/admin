@@ -138,7 +138,7 @@ function createForm(tour = null) {
     duration: 0,
     price: 0,
     pprice: 0,
-    maxpers: 0,
+    groupsize: 0,
     active: true,
     discount: 0,
     discountFrom: today,
