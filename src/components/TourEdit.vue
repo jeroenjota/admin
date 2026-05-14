@@ -51,12 +51,13 @@
             </label>
           </div>
         </div>
-        <div class="grid grid-cols-10 gap-2">
+        <div class="grid grid-cols-11 gap-1">
           <label class="col-span-2" for="prijs">Prijs</label>
-          <label class="col-span-2" for="prpp">Prijs pp</label>
+          <label class="col-span-1" for="prpp">Prijs pp</label>
           <label for="korting">Korting</label>
           <label for="max">Max p</label>
           <label for="duur">Duur</label>
+          <label class="col-span-2" for="transportation">Transp</label>
           <label for="rating">Rating</label>
           <label for="start">Vroegst</label>
           <label for="max">Laatst</label>
@@ -73,7 +74,7 @@
             name="prpp"
             step="2.5"
             placeholder="Prijs pp"
-            class="col-span-2 rounded border p-2" />
+            class="col-span-1 rounded border p-2" />
           <input
             v-model.number="form.discount"
             type="number"
@@ -93,6 +94,11 @@
             placeholder="Duur"
             step="0.5"
             class="rounded border p-2" />
+          <select v-model="form.transportation" class="col-span-2 rounded border p-2">
+            <option value="Car">Auto</option>
+            <option value="Bike">Fiets</option>
+            <option value="Walking">Wandelen</option>
+          </select> 
           <input
             v-model.number="form.rating"
             type="number"

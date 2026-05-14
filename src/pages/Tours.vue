@@ -133,7 +133,7 @@ function createForm(tour = null) {
     title: "",
     description: "",
     content: "",
-    where: "",
+    transportation: "",
     showorder: null,
     duration: 0,
     price: 0,
