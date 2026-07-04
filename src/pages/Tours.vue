@@ -138,7 +138,7 @@ function createForm(tour = null) {
     duration: 0,
     price: 0,
     pprice: 0,
-    groupsize: 0,
+    groupSize: 0,
     active: true,
     discount: 0,
     discountFrom: today,
@@ -155,6 +155,8 @@ function createForm(tour = null) {
   return {
     ...base,
     ...tour,
+    // Keep compatibility with legacy lowercase field names if present.
+    groupSize: Number(tour.groupSize ?? tour.groupsize ?? 0),
     fromDate: normalizeDate(tour.fromDate, initDate),
     tillDate: normalizeDate(tour.tillDate, future),
     discountFrom: normalizeDate(tour.discountFrom, today),
@@ -167,11 +169,16 @@ function createForm(tour = null) {
 async function saveTour() {
   const method = form.id ? "PUT" : "POST";
   const url = form.id ? `/admin/tours/${form.id}` : "/admin/tours";
+  const payload = {
+    ...form,
+    groupSize: Number(form.groupSize ?? form.groupsize ?? 0),
+  };
+  delete payload.groupsize;
 
   const response = await apiFetch(url, {
     method,
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(form),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {

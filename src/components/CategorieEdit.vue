@@ -59,7 +59,7 @@
   </div>
 </template>
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import PhotoLibraryModal from "./PhotoLibraryModal.vue";
 import { assetUrl } from "../composables/useApi.js";
 
@@ -77,10 +77,8 @@ const props = defineProps({
 const pickPhotoView = ref(false);
 
 const koppelFoto = (photoFile) => {
-  // console.log("Koppel foto called with file:", photoFile);
   props.form.photo = photoFile;
   pickPhotoView.value = false;
-  // console.log("Photo selected with file:", photoFile);
 };
 
 const emit = defineEmits(["close", "save"]);

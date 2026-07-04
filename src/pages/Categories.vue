@@ -58,7 +58,6 @@ const closeEdit = () => {
 
 async function saveOrder() {
   const payload = categories.value.map((cat) => cat.id);
-  // console.log("Reordering categories with payload:", payload);
   await apiFetch("/admin/categories/reorder", {
     method: "PATCH",
     headers: {
@@ -70,33 +69,28 @@ async function saveOrder() {
 }
 
 const saveThis = async () => {
-  // console.log("Saving this: ", form.value);
-  const result = await saveCategory(form.value);
-  if (!result.ok) {
-    toast.error("Failed to save category: " + result.error);
-    return;
+  try {
+    await saveCategory(form.value);
+    categories.value = await getCategories();
+    showEditor.value = false;
+  } catch (err) {
+    toast.error("Failed to save category: " + err.message);
   }
-
-  categories.value = await getCategories();
-  showEditor.value = false;
 };
 
 const editCategory = (category) => {
   selectedCategory.value = category;
-  // console.log("Editing category:", category);
   showEditor.value = true;
   form.value = { ...category };
-  // console.log("Form set to:", form.value);
 };
 
 const deleteCategorie = async (categoryId) => {
-  console.log("Deleting category with ID:", categoryId);
   const response = await apiFetch(`/admin/categories/${categoryId}`, {
     method: "DELETE",
   });
-  console.log("Delete response:", response);
   if (!response.ok) {
-    toast.error("Failed to delete category: " + response.error);
+    const text = await response.text();
+    toast.error("Failed to delete category: " + (text || "Onbekende fout"));
     return;
   }
   categories.value = await getCategories();
@@ -105,6 +99,5 @@ const deleteCategorie = async (categoryId) => {
 
 onMounted(async () => {
   categories.value = await getCategories();
-  console.log("Fetched categories:", categories.value);
 });
 </script>

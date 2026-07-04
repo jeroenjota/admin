@@ -124,7 +124,6 @@ async function upload(files) {
    Link bestaande foto
 ------------------------- */
 async function linkPhotos(photoIds) {
-  // console.log("tourId: ", props.tourId);
   await Promise.all(
     photoIds.map((photoId) =>
       apiFetch(`/admin/tours/${props.tourId}/photos/${photoId}/link`, {

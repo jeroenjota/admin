@@ -18,10 +18,10 @@
             Categories
           </router-link>
           <router-link
-            to="users"
+            to="system"
             class="block rounded px-3 py-2 hover:bg-sky-800"
             active-class="bg-blue-800 font-bold">
-            Users
+            Systeem
           </router-link>
         </nav>
       </div>
@@ -43,16 +43,12 @@
 </template>
 
 <script setup>
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
-const route = useRoute();
 
 function logout() {
   localStorage.removeItem("token");
   router.push("/login");
 }
-
-// Helper voor actieve menu highlight
-const isActive = (path) => route.path === path;
 </script>

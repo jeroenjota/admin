@@ -1,4 +1,4 @@
-import { apiUrl, assetUrl, apiFetch } from "@/composables/useApi.js";
+import { apiUrl, apiFetch } from "@/composables/useApi.js";
 
 export const getCategories = async () => {
   const response = await apiFetch("/admin/categories");
@@ -10,7 +10,6 @@ export const getCategories = async () => {
 };  
 
 export const saveCategory = async (category) => {
-  console.log("Saving category in .api.js", JSON.stringify(category));
   const url = category.id ? apiUrl(`/admin/categories/${category.id}`) : apiUrl("/admin/categories");
   const response = await fetch(url, {
     method: category.id ? "PUT" : "POST",
@@ -26,7 +25,6 @@ export const saveCategory = async (category) => {
 }
 
 export const saveTourCategories = async (tourId, categoryIds) => {
-  console.log("Params", tourId, categoryIds )
   const response = await apiFetch(`/admin/tours/${tourId}/categories`, {
     method: "POST",
     headers: {
@@ -41,7 +39,6 @@ export const saveTourCategories = async (tourId, categoryIds) => {
 }
 
 export const getTourCategories = async (tourId) => {
-  // console.log("GetTourCategories")
   const response = await apiFetch(`/admin/tours/${tourId}/categories`, {
   });
   if (!response.ok) {

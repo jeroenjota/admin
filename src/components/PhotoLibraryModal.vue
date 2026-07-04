@@ -107,7 +107,6 @@ function thumbUrl(filename) {
 
 /* ---------- data ophalen ---------- */
 async function fetchLibrary() {
-  console.log("Fetching photo library");
   const res = await apiFetch(`/admin/photos`)
   library.value = await res.json();
 }

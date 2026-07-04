@@ -9,26 +9,16 @@
     </div>
 
     <!-- Register form -->
-    <div class="flex flex-1 items-center justify-center bg-gray-100 p-6">">
+    <div class="flex flex-1 items-center justify-center bg-gray-100 p-6">
       <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
         <h2 class="mb-6 text-center text-2xl font-bold">Register</h2>
 
         <form @submit.prevent="handleRegister" class="space-y-4">
           <div>
-            <label for="uName" class="mb-1 block font-medium">User Name</label>
-            <div class="flex-cols flex justify-between gap-4">
-              <input
-                id="uName"
-                v-model="uName"
-                type="text"
-                placeholder="admin"
-                class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
-                required />
-              <label class="flex items-center justify-center gap-2">
-                <input type="checkbox" v-model="isAdmin" />
-                Admin
-              </label>
-            </div>
+            <p class="mb-1 block font-medium">Admin account</p>
+            <p class="rounded border border-sky-200 bg-sky-50 px-3 py-2 text-sm text-sky-900">
+              Deze registratie maakt alleen een admin-account aan.
+            </p>
           </div>
           <label for="fName" class="mb-1 block font-medium">Name</label>
           <div class="flex-cols flex">
@@ -111,9 +101,8 @@
 
 <script setup>
 import { ref } from "vue";
-import { apiUrl, apiFetch } from "../composables/useApi";
+import { apiFetch } from "../composables/useApi";
 
-const uName = ref("")
 const fName = ref("");
 const sName = ref("");
 const email = ref("");
@@ -122,7 +111,6 @@ const passwordConfirm = ref("");
 const error = ref("");
 const success = ref("");
 const loading = ref(false);
-const isAdmin = ref(false);
 
 async function handleRegister() {
   error.value = "";
@@ -136,33 +124,21 @@ async function handleRegister() {
   loading.value = true;
 
   try {
-    const userAdmin = isAdmin ? "/api/users/createAdmin" : "/api/users";
-    const response = await apiFetch(userAdmin, {
+    const response = await apiFetch("/admin/createAdmin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        uName: uName.value,
         fName: fName.value,
         sName: sName.value,
         email: email.value,
         password: password.value,
       }),
     });
-    console.log("Body: ",  JSON.stringify({
-        uName: uName.value,
-        fName: fName.value,
-        sName: sName.value,
-        email: email.value,
-        password: password.value,
-      }))
     if (!response.ok) {
-      const text =  await response.text()
-      // const errData = await response.json();
-
-      console.log( 'APi resonse: ', text)
-      // throw new Error("Fout in CreateAdmin: " + errData.message);
+      const text = await response.text();
+      throw new Error(text || "Registratie mislukt");
     }
 
     success.value = "Registration successful! You can now log in.";

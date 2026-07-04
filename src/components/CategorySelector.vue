@@ -55,9 +55,7 @@ async function save() {
 }
 
 onMounted(async () => {
-  // console.log("tourId:", props.tourId)
   categories.value = await getCategories();
   selectedIds.value = await getTourCategories(props.tourId);
-  // console.log("SelectedIds:", selectedIds.value)
 });
 </script>

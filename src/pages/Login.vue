@@ -80,7 +80,6 @@ const toast = useToast();
 async function handleLogin() {
   error.value = "";
   loading.value = true;
-  // console.log("Logging in with", email.value, password.value);
   try {
     const response = await apiFetch("/public/login", {
       method: "POST",
@@ -90,7 +89,6 @@ async function handleLogin() {
     if (!response.ok) {
       const errData = "ERRORR!" + await response.json();
       throw new Error(errData.message || "Login failed");
-      // console.log(errData)
     }
 
     const data = await response.json();
