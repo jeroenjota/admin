@@ -11,6 +11,14 @@
     </div>
 
     <div class="space-y-3 rounded border bg-white p-4 shadow">
+      <button
+        type="button"
+        class="rounded bg-slate-700 px-4 py-2 font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+        :disabled="isRunning"
+        @click="runDryRun">
+        {{ isRunning ? "Bezig..." : "Database dry-run (geen wijzigingen)" }}
+      </button>
+
       <label class="block text-sm font-medium" for="confirm">
         Typ exact: SYNC_PRODUCTION_DB
       </label>
@@ -73,10 +81,13 @@ async function runSync() {
       body: JSON.stringify({ confirm: requiredToken }),
     });
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
 
     if (!response.ok || !data.ok) {
-      throw new Error(data.message || "Synchronisatie mislukt");
+      message.value = data.message || "Synchronisatie mislukt";
+      output.value = [data.output, data.error].filter(Boolean).join("\n\n");
+      toast.error("Database synchronisatie mislukt");
+      return;
     }
 
     message.value = data.message || "Synchronisatie voltooid.";
@@ -85,6 +96,37 @@ async function runSync() {
   } catch (err) {
     message.value = err.message || "Synchronisatie mislukt";
     toast.error("Database synchronisatie mislukt");
+  } finally {
+    isRunning.value = false;
+  }
+}
+
+async function runDryRun() {
+  isRunning.value = true;
+  message.value = "";
+  output.value = "";
+
+  try {
+    const response = await apiFetch("/admin/system/sync-database-dry-run", {
+      method: "POST",
+      body: JSON.stringify({}),
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || !data.ok) {
+      message.value = data.message || "Dry-run mislukt";
+      output.value = [data.output, data.error].filter(Boolean).join("\n\n");
+      toast.error("Database dry-run mislukt");
+      return;
+    }
+
+    message.value = data.message || "Dry-run voltooid.";
+    output.value = data.output || "";
+    toast.success("Database dry-run voltooid");
+  } catch (err) {
+    message.value = err.message || "Dry-run mislukt";
+    toast.error("Database dry-run mislukt");
   } finally {
     isRunning.value = false;
   }
