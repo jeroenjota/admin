@@ -77,6 +77,21 @@ This is the admin site for managing tours in the Jota Tours application. It allo
 - Edit existing tours
 - Delete tours
 - Reorder tours via drag-and-drop
+
+## Systeembeheer: synchroniseren naar productie
+
+Gebruik de Systeem-pagina met de lokaal draaiende adminmodule en API:
+
+- **Database dry-run**: toont de aantallen rijen lokaal en in productie, zonder wijzigingen (deployscript optie 5). Dit controleert geen foto-bestanden of inhoudelijke verschillen.
+- **Database + foto's synchroniseren**: voert `../scripts/deploy-jota.sh content` uit, dezelfde actie als optie 3. Eerst worden uploadbestanden overgezet, daarna de database.
+- **Alleen database synchroniseren**: voert de databaseactie uit, dezelfde actie als optie 4.
+
+Typ `SYNC_PRODUCTION_DB` en bevestig de actie. Tijdens de uitvoering zijn de knoppen geblokkeerd; resultaat en uitvoer verschijnen op de pagina.
+
+Alleen `tours`, `photos`, `tour_categories` en `tour_photos` worden vervangen door de lokale inhoud. De tabel met categorieën zelf en gebruikersaccounts worden niet gesynchroniseerd. Het script maakt vooraf een back-up van de betrokken productietabellen. Bestanden worden gekopieerd zonder verwijderingen op productie; bestaande bestanden met dezelfde naam kunnen worden bijgewerkt. Bij een fout kunnen bestanden of tabellen al gedeeltelijk zijn overgezet: controleer het log voordat je opnieuw synchroniseert.
+
+De lokale API moet toegang hebben tot het deployscript, Docker/MariaDB, `rsync` en werkende SSH-toegang zonder interactieve prompts naar de server uit dat script. Database- en contentsynchronisatie via de API zijn geblokkeerd bij `NODE_ENV=production`.
+
 ## Technologies Used
 - Vue 3
 - Vite

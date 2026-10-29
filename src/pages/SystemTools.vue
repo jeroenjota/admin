@@ -5,8 +5,11 @@
     <div class="rounded border border-amber-300 bg-amber-50 p-4 text-amber-900">
       <h2 class="font-semibold">Waarschuwing</h2>
       <p class="mt-2 text-sm">
-        Deze actie synchroniseert alleen de tabellen tours, photos, tour_categories en tour_photos
-        naar productie vanuit jouw lokale omgeving. Gebruik dit alleen als je zeker weet dat dit nodig is.
+        Synchroniseren vervangt de productietabellen tours, photos, tour_categories en tour_photos
+        door de lokale inhoud. Categorieën zelf en gebruikersaccounts worden niet meegenomen.
+        Kies database + foto's om ook de uploadbestanden over te zetten, net als optie 3
+        van het deployscript. Voor het vervangen van de tabellen maakt het script een databaseback-up.
+        Gebruik dit alleen vanuit jouw lokale omgeving en als je zeker weet dat dit nodig is.
       </p>
     </div>
 
@@ -28,13 +31,22 @@
         class="w-full rounded border p-2"
         placeholder="SYNC_PRODUCTION_DB" />
 
-      <button
-        type="button"
-        class="rounded bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-300"
-        :disabled="isRunning || confirmText !== requiredToken"
-        @click="runSync">
-        {{ isRunning ? "Synchroniseren..." : "Synchroniseer database naar productie" }}
-      </button>
+      <div class="flex flex-wrap gap-3">
+        <button
+          type="button"
+          class="rounded bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-300"
+          :disabled="isRunning || confirmText !== requiredToken"
+          @click="runSync('content')">
+          {{ isRunning ? "Synchroniseren..." : "Synchroniseer database + foto's naar productie" }}
+        </button>
+        <button
+          type="button"
+          class="rounded bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-300"
+          :disabled="isRunning || confirmText !== requiredToken"
+          @click="runSync('database')">
+          {{ isRunning ? "Synchroniseren..." : "Synchroniseer alleen database naar productie" }}
+        </button>
+      </div>
     </div>
 
     <div v-if="message" class="rounded border bg-white p-4 shadow">
@@ -63,11 +75,15 @@ const isRunning = ref(false);
 
 const toast = useToast();
 
-async function runSync() {
-  if (confirmText.value !== requiredToken) return;
+async function runSync(mode) {
+  if (isRunning.value || confirmText.value !== requiredToken) return;
 
+  const includesUploads = mode === "content";
+  const syncLabel = includesUploads ? "Database- en fotosynchronisatie" : "Database synchronisatie";
   const sure = confirm(
-      "Weet je zeker dat je de productie tabellen tours/photos/tour_categories/tour_photos wilt overschrijven vanaf lokaal?"
+    includesUploads
+      ? "Weet je zeker dat je de lokale uploadbestanden wilt overzetten en de productietabellen tours/photos/tour_categories/tour_photos wilt overschrijven? Dit is hetzelfde als optie 3 van het deployscript."
+      : "Weet je zeker dat je de productie tabellen tours/photos/tour_categories/tour_photos wilt overschrijven vanaf lokaal?"
   );
   if (!sure) return;
 
@@ -76,26 +92,27 @@ async function runSync() {
   output.value = "";
 
   try {
-    const response = await apiFetch("/admin/system/sync-database", {
+    const response = await apiFetch(`/admin/system/sync-${mode}`, {
       method: "POST",
       body: JSON.stringify({ confirm: requiredToken }),
     });
 
-    const data = await response.json().catch(() => ({}));
+    const data = await response.json();
 
     if (!response.ok || !data.ok) {
       message.value = data.message || "Synchronisatie mislukt";
       output.value = [data.output, data.error].filter(Boolean).join("\n\n");
-      toast.error("Database synchronisatie mislukt");
+      toast.error(`${syncLabel} mislukt`);
       return;
     }
 
     message.value = data.message || "Synchronisatie voltooid.";
     output.value = data.output || "";
-    toast.success("Database synchronisatie voltooid");
+    toast.success(`${syncLabel} voltooid`);
+    confirmText.value = "";
   } catch (err) {
     message.value = err.message || "Synchronisatie mislukt";
-    toast.error("Database synchronisatie mislukt");
+    toast.error(`${syncLabel} mislukt`);
   } finally {
     isRunning.value = false;
   }
@@ -112,7 +129,7 @@ async function runDryRun() {
       body: JSON.stringify({}),
     });
 
-    const data = await response.json().catch(() => ({}));
+    const data = await response.json();
 
     if (!response.ok || !data.ok) {
       message.value = data.message || "Dry-run mislukt";
