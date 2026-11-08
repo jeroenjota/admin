@@ -5,10 +5,11 @@
     <div class="rounded border border-amber-300 bg-amber-50 p-4 text-amber-900">
       <h2 class="font-semibold">Waarschuwing</h2>
       <p class="mt-2 text-sm">
-        Synchroniseren vervangt de productietabellen tours, photos, tour_categories en tour_photos
-        door de lokale inhoud. Categorieën zelf en gebruikersaccounts worden niet meegenomen.
+        Synchroniseren vervangt de volledige productiedatabase door development:
+        alle tabellen, structuren en gegevens, inclusief reviews, categorieën en gebruikersaccounts.
+        Gegevens die alleen in productie staan worden verwijderd.
         Kies database + foto's om ook de uploadbestanden over te zetten, net als optie 3
-        van het deployscript. Voor het vervangen van de tabellen maakt het script een databaseback-up.
+        van het deployscript. Voor het vervangen maakt het script een volledige databaseback-up.
         Gebruik dit alleen vanuit jouw lokale omgeving en als je zeker weet dat dit nodig is.
       </p>
     </div>
@@ -82,8 +83,8 @@ async function runSync(mode) {
   const syncLabel = includesUploads ? "Database- en fotosynchronisatie" : "Database synchronisatie";
   const sure = confirm(
     includesUploads
-      ? "Weet je zeker dat je de lokale uploadbestanden wilt overzetten en de productietabellen tours/photos/tour_categories/tour_photos wilt overschrijven? Dit is hetzelfde als optie 3 van het deployscript."
-      : "Weet je zeker dat je de productie tabellen tours/photos/tour_categories/tour_photos wilt overschrijven vanaf lokaal?"
+      ? "Weet je zeker dat je de lokale uploadbestanden wilt overzetten en de VOLLEDIGE productiedatabase wilt vervangen door development, inclusief reviews en gebruikersaccounts? Productie-only gegevens verdwijnen."
+      : "Weet je zeker dat je de VOLLEDIGE productiedatabase wilt vervangen door development, inclusief reviews en gebruikersaccounts? Productie-only gegevens verdwijnen."
   );
   if (!sure) return;
 

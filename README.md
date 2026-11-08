@@ -93,10 +93,8 @@ Voer eerst `npm run db:reviews` uit in de API-map om de tabel aan te maken.
 Deze opdracht is herhaalbaar en gebruikt de database uit de API-configuratie.
 Als er al reviews bestaan zonder reviewdatum, krijgt deze datum initieel de
 opslagdatum (`createdAt`); corrigeer die indien nodig in de admin.
-Voor productie moet de tabel daar ook apart worden aangemaakt.
-De bestaande databasesynchronisatie neemt `reviews` **niet** mee; voer reviews
-voor productie dus in de productie-admin in. Zorg bij synchronisatie dat de
-tour-ID's waar productie-reviews naar verwijzen behouden blijven.
+De volledige databasesynchronisatie neemt ook de reviews-tabel en haar structuur
+mee naar productie. Reviews die alleen in productie staan worden hierbij vervangen.
 Publiek reviews indienen en controle van tourdeelname worden nog niet ondersteund.
 
 Backendtests: `node --test controllers/reviews.controller.test.js` vanuit de
@@ -107,15 +105,40 @@ deze vereist de aangemaakte tabel en minstens een tour en draait testdata terug.
 
 Gebruik de Systeem-pagina met de lokaal draaiende adminmodule en API:
 
-- **Database dry-run**: toont de aantallen rijen lokaal en in productie, zonder wijzigingen (deployscript optie 5). Dit controleert geen foto-bestanden of inhoudelijke verschillen.
+- **Database dry-run**: toont alle tabellen en views met aantallen rijen lokaal en in productie, zonder wijzigingen (deployscript optie 5). Dit controleert geen foto-bestanden, routines of inhoudelijke verschillen.
 - **Database + foto's synchroniseren**: voert `../scripts/deploy-jota.sh content` uit, dezelfde actie als optie 3. Eerst worden uploadbestanden overgezet, daarna de database.
 - **Alleen database synchroniseren**: voert de databaseactie uit, dezelfde actie als optie 4.
 
 Typ `SYNC_PRODUCTION_DB` en bevestig de actie. Tijdens de uitvoering zijn de knoppen geblokkeerd; resultaat en uitvoer verschijnen op de pagina.
 
-Alleen `tours`, `photos`, `tour_categories` en `tour_photos` worden vervangen door de lokale inhoud. De tabel met categorieën zelf en gebruikersaccounts worden niet gesynchroniseerd. Het script maakt vooraf een back-up van de betrokken productietabellen. Bestanden worden gekopieerd zonder verwijderingen op productie; bestaande bestanden met dezelfde naam kunnen worden bijgewerkt. Bij een fout kunnen bestanden of tabellen al gedeeltelijk zijn overgezet: controleer het log voordat je opnieuw synchroniseert.
+De **volledige database** wordt vervangen: schema, data, views, triggers, routines
+en events, inclusief reviews, categorieën en applicatiegebruikersaccounts.
+Productie-only tabellen en gegevens verdwijnen. MariaDB-serveraccounts en grants
+vallen hier niet onder. Development en productie moeten dezelfde databasenaam
+gebruiken. De productiegebruiker moet de database mogen droppen/aanmaken en alle
+betrokken objecten kunnen dumpen en importeren.
+
+Development (MariaDB 11.8) gebruikt soms de collationalias
+`utf8mb4_uca1400_ai_ci`; het script gebruikt daarvoor in de DDL de equivalente
+`uca1400_ai_ci`-naam die MariaDB 10.11 ook herkent. De reviewteksten blijven intact.
+Andere incompatibele databasefeatures kunnen alsnog een importfout veroorzaken.
+
+Het script bewaart vooraf een volledige productieback-up op een uniek pad
+`/tmp/jota_backup.XXXXXXXX.sql.gz`, vermeld in het log. Bij een importfout probeert
+het deze back-up terug te zetten en blijft de opdracht mislukt. Bij een onderbroken
+verbinding of mislukte restore is handmatig herstel nodig. Laat tijdens
+synchronisatie geen nieuwe boekingen of andere databasewijzigingen plaatsvinden;
+de vervanging is niet atomair. Bewaar back-ups op een duurzame locatie als je ze
+langer wilt houden. Bestanden worden gekopieerd zonder verwijderingen op productie;
+bestaande bestanden met dezelfde naam kunnen worden bijgewerkt. Uploads worden
+niet teruggedraaid bij een databasefout.
 
 De lokale API moet toegang hebben tot het deployscript, Docker/MariaDB, `rsync` en werkende SSH-toegang zonder interactieve prompts naar de server uit dat script. Database- en contentsynchronisatie via de API zijn geblokkeerd bij `NODE_ENV=production`.
+
+Validatie zonder productiewijzigingen, vanuit de API-map:
+`bash -n ../scripts/deploy-jota.sh` en
+`node --test ../scripts/deploy-jota.test.js controllers/system.controller.test.js`.
+De deploytests gebruiken geisoleerde command-mocks voor Docker, SSH en MariaDB.
 
 ## Technologies Used
 - Vue 3
