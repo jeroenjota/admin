@@ -78,6 +78,31 @@ This is the admin site for managing tours in the Jota Tours application. It allo
 - Delete tours
 - Reorder tours via drag-and-drop
 
+## Reviews
+
+Gebruik **Reviews** in het adminmenu om reviews toe te voegen, te wijzigen of te
+verwijderen. Selecteer een bestaande tour en vul de datum waarop de tour is
+gedaan, de datum waarop de review is geschreven, de voornaam en de reviewtekst
+in. Selecteer ook het aantal hele sterren (0 tot en met 5, verplicht bij opslaan).
+Bestaande reviews zonder score houden een lege score totdat je die invult.
+Opgeslagen reviews worden direct publiek getoond, nieuwste tourdatum
+eerst. Beide datums worden getoond. De tournaam volgt de gekoppelde tour.
+Een tour met reviews kan pas worden verwijderd nadat de reviews zijn verwijderd.
+
+Voer eerst `npm run db:reviews` uit in de API-map om de tabel aan te maken.
+Deze opdracht is herhaalbaar en gebruikt de database uit de API-configuratie.
+Als er al reviews bestaan zonder reviewdatum, krijgt deze datum initieel de
+opslagdatum (`createdAt`); corrigeer die indien nodig in de admin.
+Voor productie moet de tabel daar ook apart worden aangemaakt.
+De bestaande databasesynchronisatie neemt `reviews` **niet** mee; voer reviews
+voor productie dus in de productie-admin in. Zorg bij synchronisatie dat de
+tour-ID's waar productie-reviews naar verwijzen behouden blijven.
+Publiek reviews indienen en controle van tourdeelname worden nog niet ondersteund.
+
+Backendtests: `node --test controllers/reviews.controller.test.js` vanuit de
+API-map. Gebruik `RUN_REVIEWS_DB_TESTS=1` voor de extra database-integratietest;
+deze vereist de aangemaakte tabel en minstens een tour en draait testdata terug.
+
 ## Systeembeheer: synchroniseren naar productie
 
 Gebruik de Systeem-pagina met de lokaal draaiende adminmodule en API:

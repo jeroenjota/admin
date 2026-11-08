@@ -6,6 +6,7 @@ import Dashboard from "@/pages/Dashboard.vue";
 import Tours from "@/pages/Tours.vue";
 import Categories from "@/pages/Categories.vue"
 import SystemTools from "@/pages/SystemTools.vue";
+import Reviews from "@/pages/Reviews.vue";
 
 const routes = [
   { path: "/login", component: Login, meta: { guestOnly: true } },
@@ -19,6 +20,7 @@ const routes = [
       { path: "", redirect: "tours" },
       { path: "tours", component: Tours },
       { path: "categories", component: Categories },
+      { path: "reviews", component: Reviews },
       { path: "system", component: SystemTools },
     ],
   },

@@ -18,6 +18,12 @@
             Categories
           </router-link>
           <router-link
+            to="reviews"
+            class="block rounded px-3 py-2 hover:bg-sky-800"
+            active-class="bg-blue-800 font-bold">
+            Reviews
+          </router-link>
+          <router-link
             to="system"
             class="block rounded px-3 py-2 hover:bg-sky-800"
             active-class="bg-blue-800 font-bold">
